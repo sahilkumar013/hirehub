@@ -1,0 +1,50 @@
+{% extends 'jobs/base.html' %}
+
+{% block content %}
+    <h1>Available Jobs </h1>
+
+    {% for job in jobs %}
+        <div style="background:white; padding:15px; margin-bottom:10px;">
+            {% comment %} <h3>{{ job.title }}</h3> {% endcomment %}
+            
+               <h3>
+                   <a href="{% url 'job_detail' job.id %}">
+                          {{ job.title }}
+                      </a>
+                </h3>
+                
+      
+            <p><strong>Company:</strong> {{ job.company }}</p>
+            <p><strong>Location:</strong> {{ job.location }}</p>
+            <p><strong>Salary:</strong> ₹{{ job.salary }}</p>
+            <p>{{ job.description|truncatewords:20 }}</p>
+
+
+            
+    {% if user == job.owner %}
+    <a href="{% url 'delete_job' job.id %}">Delete</a>
+    {% endif %}
+
+        </div>
+    {% empty %}
+        <p>No jobs available.</p>
+    {% endfor %}
+
+
+
+    <div>
+    {% if jobs.has_previous %}
+        <a href="?page=1">First</a>
+        <a href="?page={{ jobs.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ jobs.number }} of {{ jobs.paginator.num_pages }}</span>
+
+    {% if jobs.has_next %}
+        <a href="?page={{ jobs.next_page_number }}">Next</a>
+        <a href="?page={{ jobs.paginator.num_pages }}">Last</a>
+    {% endif %}
+</div>
+
+    
+{% endblock %}
